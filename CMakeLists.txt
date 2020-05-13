@@ -14,7 +14,7 @@ include_directories(include)
 file(GLOB SOURCES "src/*.cpp")
 
 add_executable(monitor ${SOURCES})
-add_executable(test test/format.test.cpp)
+add_executable(test test/format_test.cpp)
 
 target_link_libraries(test
         gtest_main)
