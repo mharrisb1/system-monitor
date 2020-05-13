@@ -7,10 +7,10 @@ format:
 
 .PHONY: build
 build:
-	mkdir -p build \
-	cd build && \
-	cmake .. && \
-	make
+	mkdir -p build
+    cd build && \
+    cmake .. && \
+    make
 
 .PHONY: debug
 debug:
@@ -25,7 +25,7 @@ clean:
 
 .PHONY: test
 test:
-	mkdir -p build \
+	mkdir -p build
     cd build && \
     cmake .. && \
     cmake --build . && \
