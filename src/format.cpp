@@ -9,8 +9,8 @@ using std::string;
 // TODO: Complete this helper function
 // INPUT: Long int measuring seconds
 // OUTPUT: HH:MM:SS
-string Format::ElapsedTime(long seconds) {
-    long int    hour,
+string Format::ElapsedTime(int seconds) {
+     int    hour,
                 min;
 
     std::string hh,
