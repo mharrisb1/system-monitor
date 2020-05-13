@@ -1,6 +1,5 @@
 #include <string>
-#include <array>
-#include <charconv>
+#include <ostr
 
 #include "format.h"
 
@@ -9,8 +8,8 @@ using std::string;
 // TODO: Complete this helper function
 // INPUT: Long int measuring seconds
 // OUTPUT: HH:MM:SS
-string Format::ElapsedTime(int seconds) {
-     int    hour,
+string Format::ElapsedTime(long seconds) {
+     long       hour,
                 min;
 
     std::string hh,

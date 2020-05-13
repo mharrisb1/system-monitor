@@ -2054,7 +2054,7 @@ bool String::WideCStringEquals(const wchar_t * lhs, const wchar_t * rhs) {
 // Helper function for *_STREQ on wide strings.
 AssertionResult CmpHelperSTREQ(const char* lhs_expression,
                                const char* rhs_expression,
-                               const wchar_t* lhs,
+                               const char *lhs,
                                const wchar_t* rhs) {
   if (String::WideCStringEquals(lhs, rhs)) {
     return AssertionSuccess();

@@ -1685,7 +1685,7 @@ GTEST_API_ AssertionResult CmpHelperSTRCASENE(const char* s1_expression,
 // INTERNAL IMPLEMENTATION - DO NOT USE IN A USER PROGRAM.
 GTEST_API_ AssertionResult CmpHelperSTREQ(const char* s1_expression,
                                           const char* s2_expression,
-                                          const wchar_t* s1,
+                                          const char *s1,
                                           const wchar_t* s2);
 
 // Helper function for *_STRNE on wide strings.
