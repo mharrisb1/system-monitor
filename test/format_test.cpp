@@ -3,5 +3,5 @@
 
 TEST(ExampleTests, FormatTime) {
     std::string result = Format::ElapsedTime(83552);
-    ASSERT_STREQ("23:12:32", result);
+    EXPECT_EQ("23:12:32", result);
 }
