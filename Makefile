@@ -1,5 +1,5 @@
 .PHONY: all
-all: format build
+all: format test build
 
 .PHONY: format
 format:
@@ -7,7 +7,7 @@ format:
 
 .PHONY: build
 build:
-	mkdir -p build
+	mkdir -p build \
 	cd build && \
 	cmake .. && \
 	make
@@ -22,3 +22,12 @@ debug:
 .PHONY: clean
 clean:
 	rm -rf build
+
+.PHONY: test
+test:
+	mkdir -p build \
+    cd build && \
+    cmake .. && \
+    cmake --build . && \
+    cd test && \
+    ./ExampleTests
