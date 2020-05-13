@@ -8,9 +8,9 @@ format:
 .PHONY: build
 build:
 	mkdir -p build
-    cd build && \
-    cmake .. && \
-    make
+	cd build && \
+	cmake .. && \
+	make
 
 .PHONY: debug
 debug:
@@ -28,6 +28,6 @@ test:
 	mkdir -p build
     cd build && \
     cmake .. && \
-    cmake --build . && \
+    make && \
     cd test && \
     ./ExampleTests
