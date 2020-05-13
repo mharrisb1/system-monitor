@@ -25,7 +25,7 @@ clean:
 
 .PHONY: test
 test:
-	mkdir -p build
+	mkdir -p build && \
     cd build && \
     cmake .. && \
     make && \
