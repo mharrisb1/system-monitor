@@ -22,3 +22,11 @@ debug:
 .PHONY: clean
 clean:
 	rm -rf build
+
+.PHONY: test
+test:
+	mkdir -p build && \
+    cd build && \
+    cmake .. && \
+    cmake --build . && \
+    ctest --output-on-failure
