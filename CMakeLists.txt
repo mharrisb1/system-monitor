@@ -2,11 +2,8 @@ cmake_minimum_required(VERSION 3.13)
 project(monitor)
 
 set(CMAKE_CXX_STANDARD 17)
-set(Test ExampleTest)
 
 enable_testing()
-
-add_subdirectory(googletest)
 
 find_package(Curses REQUIRED)
 include_directories(${CURSES_INCLUDE_DIRS})
@@ -15,10 +12,6 @@ include_directories(include)
 file(GLOB SOURCES "src/*.cpp")
 
 add_executable(monitor ${SOURCES})
-add_executable(${Test} test/format_test.cpp)
-
-target_link_libraries(${Test}
-        gtest_main)
 
 set_property(TARGET monitor PROPERTY CXX_STANDARD 17)
 target_link_libraries(monitor ${CURSES_LIBRARIES})
