@@ -28,6 +28,5 @@ test:
 	mkdir -p build && \
     cd build && \
     cmake .. && \
-    make && \
-    cd test && \
-    ./ExampleTests
+    cmake --build . && \
+    ctest --output-on-failure
