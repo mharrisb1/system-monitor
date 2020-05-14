@@ -13,17 +13,17 @@ include_directories(include)
 file(GLOB SOURCES "src/*.cpp")
 
 # uncomment for build
-#add_executable(monitor ${SOURCES})
-#target_link_libraries(monitor ${CURSES_LIBRARIES})
+add_executable(monitor ${SOURCES})
+target_link_libraries(monitor ${CURSES_LIBRARIES})
 # TODO: Run -Werror in CI.
-#target_compile_options(monitor PRIVATE -Wall -Wextra)
+target_compile_options(monitor PRIVATE -Wall -Wextra)
 
 # uncomment for test
-add_executable(cpp_test test/format.test.cpp src/format.cpp)
+add_executable(elapsed_time_formatter test/format.test.cpp src/format.cpp)
 enable_testing()
 add_test(
-        NAME cpp_test
-        COMMAND $<TARGET_FILE:cpp_test>
+        NAME elapsed_time_formatter
+        COMMAND $<TARGET_FILE:elapsed_time_formatter>
 )
 
 
