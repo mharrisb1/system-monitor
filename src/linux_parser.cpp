@@ -101,7 +101,6 @@ long LinuxParser::UpTime() {
         std::getline(filestream, line);
         std::istringstream linestream(line);
         linestream >> upTime >> idleTime;
-        long upTime = static_cast<long int>(upTime);
     }
     return upTime;
 }
