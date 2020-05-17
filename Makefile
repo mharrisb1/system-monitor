@@ -27,6 +27,6 @@ clean:
 test:
 	mkdir -p build && \
     cd build && \
-    cmake .. && \
+    cmake -D TEST=ON .. && \
     cmake --build . && \
     ctest --output-on-failure
