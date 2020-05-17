@@ -12,7 +12,8 @@ include_directories(include)
 
 file(GLOB SOURCES "src/*.cpp")
 
-option(TEST "Run tests only? (No build)" OFF)
+option(TEST "Run tests only?" OFF)
+message(STATUS "Run tests only = " ${TEST})
 
 if(TEST)
     add_executable(elapsed_time_formatter test/format.test.cpp src/format.cpp)
