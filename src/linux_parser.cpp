@@ -47,7 +47,7 @@ string LinuxParser::Kernel() {
   return kernel;
 }
 
-// BONUS: Update this to use std::filesystem
+// TODO: Update this to use std::filesystem (bonus)
 vector<int> LinuxParser::Pids() {
   vector<int> pids;
   DIR* directory = opendir(kProcDirectory.c_str());
@@ -67,8 +67,29 @@ vector<int> LinuxParser::Pids() {
   return pids;
 }
 
-// TODO: Read and return the system memory utilization
-float LinuxParser::MemoryUtilization() { return 0.0; }
+// DONE
+float LinuxParser::MemoryUtilization() {
+    std::string line;
+    std::string key;   // example MemTotal:
+    float value;       // example 3812372
+    std::string unit;  // example kB
+    float memTotal {0.00};
+    float memAvailable {0.00};
+    std::ifstream filestream("/proc" + kMeminfoFilename);
+    if (filestream.is_open()) {
+        while (std::getline(filestream, line)) {
+            std::istringstream linestream(line);
+            while (linestream >> key >> value >> unit) {
+                if (key == "MemTotal:") {
+                    memTotal = value;
+                } else if (key == "MemAvailable:") {
+                    memAvailable = value;
+                }
+            }
+        }
+    }
+    return 1 - (memAvailable / memTotal);
+}
 
 // TODO: Read and return the system uptime
 long LinuxParser::UpTime() { return 0; }

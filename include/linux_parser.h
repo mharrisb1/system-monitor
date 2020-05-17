@@ -1,5 +1,4 @@
-#ifndef SYSTEM_PARSER_H
-#define SYSTEM_PARSER_H
+#pragma once
 
 #include <fstream>
 #include <regex>
@@ -53,5 +52,3 @@ std::string Uid(int pid);
 std::string User(int pid);
 long int UpTime(int pid);
 };  // namespace LinuxParser
-
-#endif

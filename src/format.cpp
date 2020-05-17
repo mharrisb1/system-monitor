@@ -2,9 +2,7 @@
 
 #include "format.h"
 
-using std::string;
-
-string Format::ElapsedTime(long seconds) {
+std::string Format::ElapsedTime(long seconds) {
     long int hours, mins;
     std::string hh, mm, ss;
 
