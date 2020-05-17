@@ -28,7 +28,7 @@ list(APPEND TEST1
         test/format.test.cpp)
 
 list(APPEND TEST2
-        test/linux_parser_tests/memUtilization.test.cpp)
+        test/memUtilization.test.cpp)
 
 
 option(TEST "Run tests only?" OFF)
