@@ -1,4 +1,4 @@
-#include "../testkit/tester.hpp"
+#include "testkit/tester.hpp"
 #include <fstream>
 #include <sstream>
 #include <cstdio>
@@ -10,7 +10,7 @@ float MemoryUtilization() {
     std::string unit;  // example kB
     float memTotal {0.00};
     float memAvailable {0.00};
-    std::ifstream filestream("/Users/michaelharris/cpp-projects/system-monitor/test/linux_parser_tests/proc/meminfo");
+    std::ifstream filestream("../test/proc/meminfo");
     if (filestream.is_open()) {
         while (std::getline(filestream, line)) {
             std::istringstream linestream(line);
