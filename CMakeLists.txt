@@ -28,7 +28,7 @@ list(APPEND TEST1
         test/format.test.cpp)
 
 list(APPEND TEST2
-        test/memUtilization.test.cpp)
+        test/linux_parser.test.cpp)
 
 
 option(TEST "Run tests only?" OFF)
@@ -49,7 +49,7 @@ if(TEST)
             COMMAND $<TARGET_FILE:test1>
     )
     add_test(
-            NAME MemoryUtilization
+            NAME LinuxParser
             COMMAND $<TARGET_FILE:test2>
     )
 else()
