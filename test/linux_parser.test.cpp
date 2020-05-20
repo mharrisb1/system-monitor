@@ -3,42 +3,76 @@
 #include <sstream>
 #include <cstdio>
 #include <iostream>
+#include <vector>
 
-float MemoryUtilization() {
-    std::string line;
-    std::string key;   // example MemTotal:
-    float value;       // example 3812372
-    std::string unit;  // example kB
-    float memTotal {0.00};
-    float memAvailable {0.00};
-    std::ifstream filestream("../test/proc/meminfo");
-    if (filestream.is_open()) {
-        while (std::getline(filestream, line)) {
-            std::istringstream linestream(line);
-            while (linestream >> key >> value >> unit) {
-                if (key == "MemTotal:") {
-                    memTotal = value;
-                } else if (key == "MemAvailable:") {
-                    memAvailable = value;
+namespace LinuxParser {
+
+    float MemoryUtilization() {
+        std::string line;
+        std::string key;   // example MemTotal:
+        float value;       // example 3812372
+        std::string unit;  // example kB
+        float memTotal{0.00};
+        float memAvailable{0.00};
+        std::ifstream filestream("../test/proc/meminfo");
+        if (filestream.is_open()) {
+            while (std::getline(filestream, line)) {
+                std::istringstream linestream(line);
+                while (linestream >> key >> value >> unit) {
+                    if (key == "MemTotal:") {
+                        memTotal = value;
+                    } else if (key == "MemAvailable:") {
+                        memAvailable = value;
+                    }
                 }
             }
         }
+        return 1 - (memAvailable / memTotal);
     }
-    return 1 - (memAvailable / memTotal);
-}
 
-long UpTime() {
-    float upTime{0.};
-    float idleTime{0.};
-    std::string line;
-    std::ifstream filestream("../test/proc/uptime");
-    if (filestream.is_open()) {
-        std::getline(filestream, line);
-        std::istringstream linestream(line);
-        linestream >> upTime >> idleTime;
+    long UpTime() {
+        float upTime{0.};
+        float idleTime{0.};
+        std::string line;
+        std::ifstream filestream("../test/proc/uptime");
+        if (filestream.is_open()) {
+            std::getline(filestream, line);
+            std::istringstream linestream(line);
+            linestream >> upTime >> idleTime;
+        }
+        return upTime;
     }
-    return upTime;
-}
+
+    long Jiffies() {
+        std::string line;
+        std::string cpu;
+        long user_jif;
+        long nice_jif;
+        long sys_jif;
+        long idle_jif;
+        long iowait_jif;
+        long irq_jif;
+        long softirq_jif;
+        long sum_jiffies {0};
+        std::ifstream filestream("../test/proc/stat");
+        if (filestream.is_open()){
+            std::getline(filestream, line);
+            std::istringstream linestream(line);
+            linestream >> cpu >> user_jif >> nice_jif >> sys_jif >> idle_jif
+                       >> iowait_jif >> irq_jif >> softirq_jif >> sum_jiffies;
+        }
+
+        std::vector<long int> jiffies {user_jif, nice_jif, sys_jif, idle_jif, iowait_jif,
+                                       irq_jif, softirq_jif, sum_jiffies};
+
+        for (auto j: jiffies) {
+            sum_jiffies += j;
+        }
+
+        return sum_jiffies;
+    }
+
+}  // namespace LinuxParser
 
 int main() {
     /* Test 1
@@ -47,8 +81,8 @@ int main() {
      * EXPECTED OUTPUT: 0.073545
      *
      */
-    Test<float> test1(MemoryUtilization(), 0.07354476);
-    printf("Looking for %f and got %f\n", test1.CheckValue(), test1.TestValue());
+    Test<float> test1(LinuxParser::MemoryUtilization(), 0.07354476);
+    printf("1: Looking for %f and got %f\n", test1.CheckValue(), test1.TestValue());
 
     /* Test 2
      *
@@ -56,11 +90,23 @@ int main() {
      * EXPECTED OUTPUT: 34406
      *
      */
-    Test<long int> test2(UpTime(), 32831);
-    printf("Looking for %ld and got %ld\n", test2.CheckValue(), test2.TestValue());
+    Test<long int> test2(LinuxParser::UpTime(), 32831);
+    printf("2: Looking for %ld and got %ld\n", test2.CheckValue(), test2.TestValue());
 
+    /* Test 3
+     *
+     * INPUT:           test/linux_parser_tests/proc/stat
+     * EXPECTED OUTPUT: 559594
+     *
+     */
+    Test<long int> test3(LinuxParser::Jiffies(), 559594);
+    printf("3: Looking for %ld and got %ld\n", test3.CheckValue(), test3.TestValue());
+
+
+    // Check that all tests pass
     if (test1.TestValue() - test1.CheckValue() < 0.001 &&
-        test2.Pass()) {
+        test2.Pass() &&
+        test3.Pass()) {
         return 0;  // pass
     } else {
         return 1;  // fail

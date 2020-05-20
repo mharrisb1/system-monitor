@@ -45,11 +45,11 @@ if(TEST)
     target_link_libraries(test2 tester)
     enable_testing()
     add_test(
-            NAME ElapsedTimeFormatter
+            NAME format.h
             COMMAND $<TARGET_FILE:test1>
     )
     add_test(
-            NAME LinuxParser
+            NAME linux_parser.h
             COMMAND $<TARGET_FILE:test2>
     )
 else()
