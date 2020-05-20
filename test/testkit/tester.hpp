@@ -11,6 +11,7 @@ public:
     T CheckValue() {return check_;}
     bool Pass() {return test_ == check_;}
 
+private:
     T test_;
     T check_;
 };
