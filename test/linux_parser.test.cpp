@@ -141,56 +141,48 @@ namespace LinuxParser {
         return value;
     }
 
+    int RunningProcesses() {
+        std::string line;
+        std::string str;
+        std::string str_int;
+        int value{0};
+        std::ifstream filestream("../test/proc/stat");
+        if (filestream.is_open()) {
+            while (std::getline(filestream, line)) {
+                std::istringstream linestream(line);
+                while (linestream >> str >> str_int) {
+                    if (str == "procs_running") {
+                        value = std::stoi(str_int);
+                    }
+                }
+            }
+        }
+        return value;
+    }
+
 }  // namespace LinuxParser
 
 int main() {
-    /* Test 1
-     *
-     * INPUT:           test/linux_parser_tests/proc/meminfo
-     * EXPECTED OUTPUT: 0.073545
-     *
-     */
     Test<float> test1(LinuxParser::MemoryUtilization(), 0.07354476);
     printf("1: Looking for %f and got %f\n", test1.CheckValue(), test1.TestValue());
 
-    /* Test 2
-     *
-     * INPUT:           test/linux_parser_tests/proc/uptime
-     * EXPECTED OUTPUT: 34406
-     *
-     */
     Test<long int> test2(LinuxParser::UpTime(), 32831);
     printf("2: Looking for %ld and got %ld\n", test2.CheckValue(), test2.TestValue());
 
-    /* Test 3
-     *
-     * INPUT:           test/linux_parser_tests/proc/stat
-     * EXPECTED OUTPUT: 559594
-     *
-     */
     Test<long int> test3(LinuxParser::Jiffies(), 559594);
     printf("3: Looking for %ld and got %ld\n", test3.CheckValue(), test3.TestValue());
 
-    /* Test 4
-     *
-     * INPUT:           test/linux_parser_tests/proc/stat
-     * EXPECTED OUTPUT: 552713
-     *
-     */
     Test<long int> test4(LinuxParser::IdleJiffies(), 552713);
     printf("4: Looking for %ld and got %ld\n", test4.CheckValue(), test4.TestValue());
 
-    /* Test 5
-     *
-     * INPUT:           test/linux_parser_tests/proc/stat
-     * EXPECTED OUTPUT: 6881
-     *
-     */
     Test<long int> test5(LinuxParser::ActiveJiffies(), 6881);
     printf("5: Looking for %ld and got %ld\n", test5.CheckValue(), test5.TestValue());
 
     Test<int> test6(LinuxParser::TotalProcesses(), 1870);
     printf("6: Looking for %i and got %i\n", test6.CheckValue(), test6.TestValue());
+
+    Test<int> test7(LinuxParser::RunningProcesses(), 2);
+    printf("6: Looking for %i and got %i\n", test7.CheckValue(), test7.TestValue());
 
     // Check that all tests pass
     if (test1.TestValue() - test1.CheckValue() < 0.001 &&
