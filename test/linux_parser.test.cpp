@@ -93,6 +93,54 @@ namespace LinuxParser {
         return idle_jif;
     }
 
+    long ActiveJiffies() {
+        std::string line;
+        std::string cpu;
+        long user_jif;
+        long nice_jif;
+        long sys_jif;
+        long idle_jif;
+        long iowait_jif;
+        long irq_jif;
+        long softirq_jif;
+        long sum_jiffies {0};
+        std::ifstream filestream("../test/proc/stat");
+        if (filestream.is_open()){
+            std::getline(filestream, line);
+            std::istringstream linestream(line);
+            linestream >> cpu >> user_jif >> nice_jif >> sys_jif >> idle_jif
+                       >> iowait_jif >> irq_jif >> softirq_jif;
+        }
+
+        std::vector<long int> jiffies {user_jif, nice_jif, sys_jif, iowait_jif,
+                                       irq_jif, softirq_jif, sum_jiffies};
+
+        for (auto j: jiffies) {
+            sum_jiffies += j;
+        }
+
+        return sum_jiffies;
+    }
+
+    int TotalProcesses() {
+        std::string line;
+        std::string str;
+        std::string str_int;
+        int value{0};
+        std::ifstream filestream("../test/proc/stat");
+        if (filestream.is_open()) {
+            while (std::getline(filestream, line)) {
+                std::istringstream linestream(line);
+                while (linestream >> str >> str_int) {
+                    if (str == "processes") {
+                        value = std::stoi(str_int);
+                    }
+                }
+            }
+        }
+        return value;
+    }
+
 }  // namespace LinuxParser
 
 int main() {
@@ -132,10 +180,25 @@ int main() {
     Test<long int> test4(LinuxParser::IdleJiffies(), 552713);
     printf("4: Looking for %ld and got %ld\n", test4.CheckValue(), test4.TestValue());
 
+    /* Test 5
+     *
+     * INPUT:           test/linux_parser_tests/proc/stat
+     * EXPECTED OUTPUT: 6881
+     *
+     */
+    Test<long int> test5(LinuxParser::ActiveJiffies(), 6881);
+    printf("5: Looking for %ld and got %ld\n", test5.CheckValue(), test5.TestValue());
+
+    Test<int> test6(LinuxParser::TotalProcesses(), 1870);
+    printf("6: Looking for %i and got %i\n", test6.CheckValue(), test6.TestValue());
+
     // Check that all tests pass
     if (test1.TestValue() - test1.CheckValue() < 0.001 &&
         test2.Pass() &&
-        test3.Pass()) {
+        test3.Pass() &&
+        test4.Pass() &&
+        test5.Pass() &&
+        test6.Pass()) {
         return 0;  // pass
     } else {
         return 1;  // fail
