@@ -1,31 +1,48 @@
-#include "format.h"
+#include "format.h"  // Format::ElapsedTime()
+#include "testkit/tester.hpp"
 #include <cstdio>
 
 int main() {
-    // test 1
-    long int test_long_1{83552};
-    std::string result_1 = Format::ElapsedTime(test_long_1);
 
-    // test 2
-    long int test_long_2{1380};
-    std::string result_2 = Format::ElapsedTime(test_long_2);
+    /* Test 1
+     *
+     * INPUT:           83552
+     * EXPECTED OUTPUT: 23:12:32
+     *
+     */
+    Test<std::string> test1(Format::ElapsedTime(83552), "23:12:32");
+    printf("Test 1: Looking for %s and got %s\n", test1.CheckValue().c_str(), test1.TestValue().c_str());
 
-    // test 3
-    long int test_long_3{36000};
-    std::string result_3 = Format::ElapsedTime(test_long_3);
+    /* Test 2
+     *
+     * INPUT:           1380
+     * EXPECTED OUTPUT: 00:23:00
+     *
+     */
+    Test<std::string> test2(Format::ElapsedTime(1380), "00:23:00");
+    printf("Test 2: Looking for %s and got %s\n", test2.CheckValue().c_str(), test2.TestValue().c_str());
 
-    //test 4
-    long int test_long_4{15534};
-    std::string result_4 = Format::ElapsedTime(test_long_4);
+    /* Test 3
+     *
+     * INPUT:           36000
+     * EXPECTED OUTPUT: 10:00:00
+     *
+     */
+    Test<std::string> test3(Format::ElapsedTime(36000), "10:00:00");
+    printf("Test 2: Looking for %s and got %s\n", test3.CheckValue().c_str(), test3.TestValue().c_str());
 
-    printf("Result 1: %s\n", result_1.c_str());
-    printf("Result 2: %s\n", result_2.c_str());
-    printf("Result 3: %s\n", result_3.c_str());
-    printf("Result 4: %s\n", result_4.c_str());
+    /* Test 4
+     *
+     * INPUT:           15534
+     * EXPECTED OUTPUT: 04:18:54
+     *
+     */
+    Test<std::string> test4(Format::ElapsedTime(15534), "04:18:54");
+    printf("Test 2: Looking for %s and got %s\n", test4.CheckValue().c_str(), test4.TestValue().c_str());
 
-    if (result_1 == "23:12:32" && result_2 == "00:23:00" && result_3 == "10:00:00" && result_4 == "04:18:54") {
-        return 0;
+    if(test1.Pass() && test2.Pass() && test3.Pass() && test4.Pass()) {
+       return 0;
     } else {
-        return 1;
+       return 1;
     }
 }

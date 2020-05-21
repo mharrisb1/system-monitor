@@ -10,20 +10,50 @@ find_package(Curses REQUIRED)
 include_directories(${CURSES_INCLUDE_DIRS})
 include_directories(include)
 
-file(GLOB SOURCES "src/*.cpp")
+list(APPEND TESTER
+        test/testkit/tester.hpp)
+
+list(APPEND BUILD_SOURCES
+        src/main.cpp
+        src/format.cpp
+        src/linux_parser.cpp
+        src/ncurses_display.cpp
+        src/process.cpp
+        src/processor.cpp
+        src/system.cpp)
+
+# file(GLOB SOURCES "src/*.cpp")
+list(APPEND TEST1
+        src/format.cpp
+        test/format.test.cpp)
+
+list(APPEND TEST2
+        test/linux_parser.test.cpp)
+
 
 option(TEST "Run tests only?" OFF)
 message(STATUS "Run tests only = " ${TEST})
 
 if(TEST)
-    add_executable(elapsed_time_formatter test/format.test.cpp src/format.cpp)
+    add_library(tester INTERFACE)
+    target_sources(tester INTERFACE ${TESTER})
+
+    add_executable(test1 ${TEST1})
+    target_link_libraries(test1 tester)
+
+    add_executable(test2 ${TEST2})
+    target_link_libraries(test2 tester)
     enable_testing()
     add_test(
-            NAME elapsed_time_formatter
-            COMMAND $<TARGET_FILE:elapsed_time_formatter>
+            NAME format.h
+            COMMAND $<TARGET_FILE:test1>
+    )
+    add_test(
+            NAME linux_parser.h
+            COMMAND $<TARGET_FILE:test2>
     )
 else()
-    add_executable(monitor ${SOURCES})
+    add_executable(monitor ${BUILD_SOURCES})
     target_link_libraries(monitor ${CURSES_LIBRARIES})
     # TODO: Run -Werror in CI.
     target_compile_options(monitor PRIVATE -Wall -Wextra)
