@@ -59,7 +59,7 @@ namespace LinuxParser {
             std::getline(filestream, line);
             std::istringstream linestream(line);
             linestream >> cpu >> user_jif >> nice_jif >> sys_jif >> idle_jif
-                       >> iowait_jif >> irq_jif >> softirq_jif >> sum_jiffies;
+                       >> iowait_jif >> irq_jif >> softirq_jif;
         }
 
         std::vector<long int> jiffies {user_jif, nice_jif, sys_jif, idle_jif, iowait_jif,
@@ -70,6 +70,27 @@ namespace LinuxParser {
         }
 
         return sum_jiffies;
+    }
+
+    long IdleJiffies() {
+        std::string line;
+        std::string cpu;
+        long user_jif;
+        long nice_jif;
+        long sys_jif;
+        long idle_jif;
+        long iowait_jif;
+        long irq_jif;
+        long softirq_jif;
+        std::ifstream filestream("../test/proc/stat");
+        if (filestream.is_open()){
+            std::getline(filestream, line);
+            std::istringstream linestream(line);
+            linestream >> cpu >> user_jif >> nice_jif >> sys_jif >> idle_jif
+                       >> iowait_jif >> irq_jif >> softirq_jif;
+        }
+
+        return idle_jif;
     }
 
 }  // namespace LinuxParser
@@ -102,6 +123,14 @@ int main() {
     Test<long int> test3(LinuxParser::Jiffies(), 559594);
     printf("3: Looking for %ld and got %ld\n", test3.CheckValue(), test3.TestValue());
 
+    /* Test 4
+     *
+     * INPUT:           test/linux_parser_tests/proc/stat
+     * EXPECTED OUTPUT: 552713
+     *
+     */
+    Test<long int> test4(LinuxParser::IdleJiffies(), 552713);
+    printf("4: Looking for %ld and got %ld\n", test4.CheckValue(), test4.TestValue());
 
     // Check that all tests pass
     if (test1.TestValue() - test1.CheckValue() < 0.001 &&

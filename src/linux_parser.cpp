@@ -105,7 +105,7 @@ long LinuxParser::UpTime() {
     return upTime;
 }
 
-// TODO: Read and return the number of jiffies for the system
+// DONE
 long LinuxParser::Jiffies() {
     std::string line;
     std::string cpu {"cpu"};
@@ -122,7 +122,7 @@ long LinuxParser::Jiffies() {
         std::getline(filestream, line);
         std::istringstream linestream(line);
         linestream >> cpu >> user_jif >> nice_jif >> sys_jif >> idle_jif
-                   >> iowait_jif >> irq_jif >> softirq_jif >> sum_jiffies;
+                   >> iowait_jif >> irq_jif >> softirq_jif;
     }
 
     std::vector<long int> jiffies {user_jif, nice_jif, sys_jif, idle_jif, iowait_jif,
@@ -142,8 +142,27 @@ long LinuxParser::ActiveJiffies(int pid[[maybe_unused]]) { return 0; }
 // TODO: Read and return the number of active jiffies for the system
 long LinuxParser::ActiveJiffies() { return 0; }
 
-// TODO: Read and return the number of idle jiffies for the system
-long LinuxParser::IdleJiffies() { return 0; }
+// DONE
+long LinuxParser::IdleJiffies() {
+    std::string line;
+    std::string cpu;
+    long user_jif;
+    long nice_jif;
+    long sys_jif;
+    long idle_jif;
+    long iowait_jif;
+    long irq_jif;
+    long softirq_jif;
+    std::ifstream filestream("/proc" + kStatFilename);
+    if (filestream.is_open()){
+        std::getline(filestream, line);
+        std::istringstream linestream(line);
+        linestream >> cpu >> user_jif >> nice_jif >> sys_jif >> idle_jif
+                   >> iowait_jif >> irq_jif >> softirq_jif;
+    }
+
+    return idle_jif;
+}
 
 // TODO: Read and return CPU utilization
 vector<string> LinuxParser::CpuUtilization() { return {}; }
