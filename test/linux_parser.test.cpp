@@ -190,7 +190,8 @@ int main() {
         test3.Pass() &&
         test4.Pass() &&
         test5.Pass() &&
-        test6.Pass()) {
+        test6.Pass() &&
+        test7.Pass()) {
         return 0;  // pass
     } else {
         return 1;  // fail
