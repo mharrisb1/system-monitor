@@ -1,5 +1,4 @@
-#ifndef PROCESS_H
-#define PROCESS_H
+#pragma once
 
 #include <string>
 /*
@@ -19,5 +18,3 @@ class Process {
   // TODO: Declare any necessary private members
  private:
 };
-
-#endif
