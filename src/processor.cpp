@@ -12,6 +12,7 @@ void Processor::AddToVector() {
 
 // TODO: Return the aggregate CPU utilization
 float Processor::Utilization() {
+    AddToVector();
     for (float i: this->cpu_utilization_t) {
         this->total_utilization += i;
     }
