@@ -191,8 +191,10 @@ long LinuxParser::IdleJiffies() {
     return idle_jif;
 }
 
-// TODO: Read and return CPU utilization
-vector<string> LinuxParser::CpuUtilization() { return {}; }
+// DONE
+float LinuxParser::CpuUtilization() {
+    return (float)ActiveJiffies() / (float)Jiffies();
+}
 
 // DONE
 int LinuxParser::TotalProcesses() {
