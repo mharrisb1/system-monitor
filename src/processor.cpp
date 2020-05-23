@@ -6,15 +6,13 @@ void Processor::AddToVector() {
         this->cpu_utilization_t.erase(this->cpu_utilization_t.begin());
     } else {
         this->cpu_utilization_t.push_back(LinuxParser::CpuUtilization());
+        this->total_utilization += this->cpu_utilization_t.back();
     }
 }
 
 // TODO: Return the aggregate CPU utilization
 float Processor::Utilization() {
     Processor::AddToVector();
-    for (float i: this->cpu_utilization_t) {
-        this->total_utilization += i;
-    }
     return total_utilization / this->cpu_utilization_t.size();
 }
 
