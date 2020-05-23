@@ -90,7 +90,7 @@ namespace LinuxParser {
                        >> iowait_jif >> irq_jif >> softirq_jif;
         }
 
-        return idle_jif;
+        return idle_jif + iowait_jif;
     }
 
     long ActiveJiffies() {
@@ -112,10 +112,10 @@ namespace LinuxParser {
                        >> iowait_jif >> irq_jif >> softirq_jif;
         }
 
-        std::vector<long int> jiffies {user_jif, nice_jif, sys_jif, iowait_jif,
+        std::vector<long int> active_jiffies {user_jif, nice_jif, sys_jif,
                                        irq_jif, softirq_jif, sum_jiffies};
 
-        for (auto j: jiffies) {
+        for (auto j: active_jiffies) {
             sum_jiffies += j;
         }
 
@@ -160,6 +160,10 @@ namespace LinuxParser {
         return value;
     }
 
+    float CpuUtilization() {
+        return (float)ActiveJiffies() / (float)Jiffies();
+    }
+
 }  // namespace LinuxParser
 
 int main() {
@@ -172,17 +176,20 @@ int main() {
     Test<long int> test3(LinuxParser::Jiffies(), 559594);
     printf("3: Looking for %ld and got %ld\n", test3.CheckValue(), test3.TestValue());
 
-    Test<long int> test4(LinuxParser::IdleJiffies(), 552713);
+    Test<long int> test4(LinuxParser::IdleJiffies(), 552816);
     printf("4: Looking for %ld and got %ld\n", test4.CheckValue(), test4.TestValue());
 
-    Test<long int> test5(LinuxParser::ActiveJiffies(), 6881);
+    Test<long int> test5(LinuxParser::ActiveJiffies(), 6778);
     printf("5: Looking for %ld and got %ld\n", test5.CheckValue(), test5.TestValue());
 
     Test<int> test6(LinuxParser::TotalProcesses(), 1870);
     printf("6: Looking for %i and got %i\n", test6.CheckValue(), test6.TestValue());
 
     Test<int> test7(LinuxParser::RunningProcesses(), 2);
-    printf("6: Looking for %i and got %i\n", test7.CheckValue(), test7.TestValue());
+    printf("7: Looking for %i and got %i\n", test7.CheckValue(), test7.TestValue());
+
+    Test<double> test8(LinuxParser::CpuUtilization(), 0.01211235);
+    printf("8: Looking for %f and got %f\nCheck vals for %ld and %ld", test8.CheckValue(), test8.TestValue(), LinuxParser::ActiveJiffies(), LinuxParser::Jiffies());
 
     // Check that all tests pass
     if (test1.TestValue() - test1.CheckValue() < 0.001 &&
@@ -191,7 +198,8 @@ int main() {
         test4.Pass() &&
         test5.Pass() &&
         test6.Pass() &&
-        test7.Pass()) {
+        test7.Pass() &&
+        test8.TestValue() - test8.CheckValue() < 0.001) {
         return 0;  // pass
     } else {
         return 1;  // fail
