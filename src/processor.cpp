@@ -1,13 +1,11 @@
 #include "processor.h"
 
 void Processor::AddToVector() {
-    while (true) {
-        if (this->cpu_utilization_t.size() > 10) {
-            this->total_utilization -= this->cpu_utilization_t.front();
-            this->cpu_utilization_t.erase(this->cpu_utilization_t.begin());
-        } else {
-            this->cpu_utilization_t.push_back(LinuxParser::CpuUtilization());
-        }
+    if (this->cpu_utilization_t.size() > 10) {
+        this->total_utilization -= this->cpu_utilization_t.front();
+        this->cpu_utilization_t.erase(this->cpu_utilization_t.begin());
+    } else {
+        this->cpu_utilization_t.push_back(LinuxParser::CpuUtilization());
     }
 }
 
