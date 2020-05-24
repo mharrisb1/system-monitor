@@ -140,7 +140,7 @@ long LinuxParser::ActiveJiffies(int pid) {
     std::string line;
 
     int           pid_;
-    char          exName [_POSIX_PATH_MAX];
+    std::string   exName;
     char          state;
     unsigned      euid,
             egid;
@@ -296,7 +296,7 @@ string LinuxParser::Command(int pid) {
     std::string line;
 
     int           pid_;
-    char          exName [_POSIX_PATH_MAX];
+    std::string   exName;
     char          state;
     unsigned      euid,
             egid;
