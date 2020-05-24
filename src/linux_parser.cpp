@@ -135,9 +135,64 @@ long LinuxParser::Jiffies() {
     return sum_jiffies;
 }
 
-// TODO: Read and return the number of active jiffies for a PID
-// REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::ActiveJiffies(int pid[[maybe_unused]]) { return 0; }
+// DONE
+long LinuxParser::ActiveJiffies(int pid) {
+    std::string line;
+
+    int           pid_;
+    char          exName [_POSIX_PATH_MAX];
+    char          state;
+    unsigned      euid,
+            egid;
+    int           ppid;
+    int           pgrp;
+    int           session;
+    int           tty;
+    int           tpgid;
+    unsigned int  flags;
+    unsigned int  minflt;
+    unsigned int  cminflt;
+    unsigned int  majflt;
+    unsigned int  cmajflt;
+    int           utime;    // 16
+    int           stime;    // 17
+    int		      cutime;
+    int           cstime;
+    int           counter;
+    int           priority;
+    unsigned int  timeout;
+    unsigned int  itrealvalue;
+    int           starttime;
+    unsigned int  vsize;
+    unsigned int  rss;
+    unsigned int  rlim;
+    unsigned int  startcode;
+    unsigned int  endcode;
+    unsigned int  startstack;
+    unsigned int  kstkesp;
+    unsigned int  kstkeip;
+    int		      signal;
+    int           blocked;
+    int           sigignore;
+    int           sigcatch;
+    unsigned int  wchan;
+    int		      sched,
+            sched_priority;
+
+    std::ifstream filestream(kProcDirectory + std::to_string(pid) + kStatFilename);
+    if (filestream.is_open()) {
+        std::getline(filestream, line);
+        std::istringstream linestream(line);
+        linestream >> pid_ >> exName >> state >> euid >> egid >> ppid >> pgrp >> session >> tty >> tpgid >> flags
+                   >> minflt >> cminflt >> majflt >> cmajflt >> utime >> stime >> cutime >> cstime >> counter
+                   >> priority >> timeout >> itrealvalue >> starttime >> vsize >> rss >> rlim >> startcode
+                   >> endcode >> startstack >> kstkesp >> kstkeip >> signal >> blocked >> sigignore >> sigcatch
+                   >> wchan >> sched >> sched_priority;
+        return utime + stime;
+    } else {
+        return 0;
+    }
+}
 
 // DONE
 long LinuxParser::ActiveJiffies() {
@@ -236,9 +291,64 @@ int LinuxParser::RunningProcesses() {
     return value;
 }
 
-// TODO: Read and return the command associated with a process
-// REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::Command(int pid[[maybe_unused]]) { return string(); }
+// DONE
+string LinuxParser::Command(int pid) {
+    std::string line;
+
+    int           pid_;
+    char          exName [_POSIX_PATH_MAX];
+    char          state;
+    unsigned      euid,
+            egid;
+    int           ppid;
+    int           pgrp;
+    int           session;
+    int           tty;
+    int           tpgid;
+    unsigned int  flags;
+    unsigned int  minflt;
+    unsigned int  cminflt;
+    unsigned int  majflt;
+    unsigned int  cmajflt;
+    int           utime;    // 16
+    int           stime;    // 17
+    int		      cutime;
+    int           cstime;
+    int           counter;
+    int           priority;
+    unsigned int  timeout;
+    unsigned int  itrealvalue;
+    int           starttime;
+    unsigned int  vsize;
+    unsigned int  rss;
+    unsigned int  rlim;
+    unsigned int  startcode;
+    unsigned int  endcode;
+    unsigned int  startstack;
+    unsigned int  kstkesp;
+    unsigned int  kstkeip;
+    int		      signal;
+    int           blocked;
+    int           sigignore;
+    int           sigcatch;
+    unsigned int  wchan;
+    int		      sched,
+            sched_priority;
+
+    std::ifstream filestream(kProcDirectory + std::to_string(pid) + kStatFilename);
+    if (filestream.is_open()) {
+        std::getline(filestream, line);
+        std::istringstream linestream(line);
+        linestream >> pid_ >> exName >> state >> euid >> egid >> ppid >> pgrp >> session >> tty >> tpgid >> flags
+                   >> minflt >> cminflt >> majflt >> cmajflt >> utime >> stime >> cutime >> cstime >> counter
+                   >> priority >> timeout >> itrealvalue >> starttime >> vsize >> rss >> rlim >> startcode
+                   >> endcode >> startstack >> kstkesp >> kstkeip >> signal >> blocked >> sigignore >> sigcatch
+                   >> wchan >> sched >> sched_priority;
+        return exName;
+    } else {
+        return "NONE";
+    }
+}
 
 // TODO: Read and return the memory used by a process
 // REMOVE: [[maybe_unused]] once you define the function

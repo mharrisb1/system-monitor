@@ -5,12 +5,10 @@
 
 class Processor {
 public:
-    void AddToVector();
-    float Utilization();  // TODO: See src/processor.cpp
+    float Utilization();
 
-
-  // TODO: Declare any necessary private members
 private:
+    void AddToVector();
     std::vector<float> cpu_utilization_t {LinuxParser::CpuUtilization()};
     float total_utilization{0};
 };

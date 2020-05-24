@@ -1,7 +1,7 @@
 #include "processor.h"
 
 void Processor::AddToVector() {
-    if (this->cpu_utilization_t.size() > 10) {
+    if (this->cpu_utilization_t.size() > 100) {
         this->total_utilization -= this->cpu_utilization_t.front();
         this->cpu_utilization_t.erase(this->cpu_utilization_t.begin());
     } else {
@@ -10,9 +10,7 @@ void Processor::AddToVector() {
     }
 }
 
-// TODO: Return the aggregate CPU utilization
 float Processor::Utilization() {
     Processor::AddToVector();
     return total_utilization / this->cpu_utilization_t.size();
 }
-

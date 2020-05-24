@@ -164,6 +164,122 @@ namespace LinuxParser {
         return (float)ActiveJiffies() / (float)Jiffies();
     }
 
+    long ActiveJiffies(int pid) {
+        std::string line;
+
+        int           pid_;
+        char          exName [_POSIX_PATH_MAX];
+        char          state;
+        unsigned      euid,
+                      egid;
+        int           ppid;
+        int           pgrp;
+        int           session;
+        int           tty;
+        int           tpgid;
+        unsigned int  flags;
+        unsigned int  minflt;
+        unsigned int  cminflt;
+        unsigned int  majflt;
+        unsigned int  cmajflt;
+        int           utime;    // 16
+        int           stime;    // 17
+        int		      cutime;
+        int           cstime;
+        int           counter;
+        int           priority;
+        unsigned int  timeout;
+        unsigned int  itrealvalue;
+        int           starttime;
+        unsigned int  vsize;
+        unsigned int  rss;
+        unsigned int  rlim;
+        unsigned int  startcode;
+        unsigned int  endcode;
+        unsigned int  startstack;
+        unsigned int  kstkesp;
+        unsigned int  kstkeip;
+        int		      signal;
+        int           blocked;
+        int           sigignore;
+        int           sigcatch;
+        unsigned int  wchan;
+        int		      sched,
+                      sched_priority;
+
+        std::ifstream filestream("../test/proc/" + std::to_string(pid) + "/stat");
+        if (filestream.is_open()) {
+            std::getline(filestream, line);
+            std::istringstream linestream(line);
+            linestream >> pid_ >> exName >> state >> euid >> egid >> ppid >> pgrp >> session >> tty >> tpgid >> flags
+                       >> minflt >> cminflt >> majflt >> cmajflt >> utime >> stime >> cutime >> cstime >> counter
+                       >> priority >> timeout >> itrealvalue >> starttime >> vsize >> rss >> rlim >> startcode
+                       >> endcode >> startstack >> kstkesp >> kstkeip >> signal >> blocked >> sigignore >> sigcatch
+                       >> wchan >> sched >> sched_priority;
+            return utime + stime;
+        } else {
+            return 0;
+        }
+    }
+
+    std::string Command(int pid) {
+        std::string line;
+
+        int           pid_;
+        char          exName [_POSIX_PATH_MAX];
+        char          state;
+        unsigned      euid,
+                      egid;
+        int           ppid;
+        int           pgrp;
+        int           session;
+        int           tty;
+        int           tpgid;
+        unsigned int  flags;
+        unsigned int  minflt;
+        unsigned int  cminflt;
+        unsigned int  majflt;
+        unsigned int  cmajflt;
+        int           utime;    // 16
+        int           stime;    // 17
+        int		      cutime;
+        int           cstime;
+        int           counter;
+        int           priority;
+        unsigned int  timeout;
+        unsigned int  itrealvalue;
+        int           starttime;
+        unsigned int  vsize;
+        unsigned int  rss;
+        unsigned int  rlim;
+        unsigned int  startcode;
+        unsigned int  endcode;
+        unsigned int  startstack;
+        unsigned int  kstkesp;
+        unsigned int  kstkeip;
+        int		      signal;
+        int           blocked;
+        int           sigignore;
+        int           sigcatch;
+        unsigned int  wchan;
+        int		      sched,
+                      sched_priority;
+
+        std::ifstream filestream("../test/proc/" + std::to_string(pid) + "/stat");
+        if (filestream.is_open()) {
+            std::getline(filestream, line);
+            std::istringstream linestream(line);
+            linestream >> pid_ >> exName >> state >> euid >> egid >> ppid >> pgrp >> session >> tty >> tpgid >> flags
+                       >> minflt >> cminflt >> majflt >> cmajflt >> utime >> stime >> cutime >> cstime >> counter
+                       >> priority >> timeout >> itrealvalue >> starttime >> vsize >> rss >> rlim >> startcode
+                       >> endcode >> startstack >> kstkesp >> kstkeip >> signal >> blocked >> sigignore >> sigcatch
+                       >> wchan >> sched >> sched_priority;
+            return exName;
+        } else {
+            return "NONE";
+        }
+    }
+
 }  // namespace LinuxParser
 
 int main() {
@@ -189,7 +305,25 @@ int main() {
     printf("7: Looking for %i and got %i\n", test7.CheckValue(), test7.TestValue());
 
     Test<double> test8(LinuxParser::CpuUtilization(), 0.01211235);
-    printf("8: Looking for %f and got %f\nCheck vals for %ld and %ld", test8.CheckValue(), test8.TestValue(), LinuxParser::ActiveJiffies(), LinuxParser::Jiffies());
+    printf("8: Looking for %f and got %f\n", test8.CheckValue(), test8.TestValue());
+
+    Test<long> test9(LinuxParser::ActiveJiffies(1), 3236);
+    printf("9: Looking for %ld and got %ld\n", test9.CheckValue(), test9.TestValue());
+
+    Test<long> test10(LinuxParser::ActiveJiffies(10), 0);
+    printf("10: Looking for %ld and got %ld\n", test10.CheckValue(), test10.TestValue());
+
+    Test<long> test11(LinuxParser::ActiveJiffies(103), 0);
+    printf("11: Looking for %ld and got %ld\n", test11.CheckValue(), test11.TestValue());
+
+    Test<std::string> test12(LinuxParser::Command(1), "(systemd)");
+    printf("12: Looking for %s and got %s\n", test12.CheckValue().c_str(), test12.TestValue().c_str());
+
+    Test<std::string> test13(LinuxParser::Command(10), "(rcu_preempt)");
+    printf("13: Looking for %s and got %s\n", test13.CheckValue().c_str(), test13.TestValue().c_str());
+
+    Test<std::string> test14(LinuxParser::Command(103), "(scsi_eh_0)");
+    printf("14: Looking for %s and got %s\n", test14.CheckValue().c_str(), test14.TestValue().c_str());
 
     // Check that all tests pass
     if (test1.TestValue() - test1.CheckValue() < 0.001 &&
@@ -199,7 +333,13 @@ int main() {
         test5.Pass() &&
         test6.Pass() &&
         test7.Pass() &&
-        test8.TestValue() - test8.CheckValue() < 0.001) {
+        test8.TestValue() - test8.CheckValue() < 0.001 &&
+        test9.Pass() &&
+        test10.Pass() &&
+        test11.Pass() &&
+        test12.Pass() &&
+        test13.Pass() &&
+        test14.Pass()) {
         return 0;  // pass
     } else {
         return 1;  // fail
