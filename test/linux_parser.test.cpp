@@ -168,7 +168,7 @@ namespace LinuxParser {
         std::string line;
 
         int           pid_;
-        char          exName [_POSIX_PATH_MAX];
+        std::string   exName;
         char          state;
         unsigned      euid,
                       egid;
@@ -226,7 +226,7 @@ namespace LinuxParser {
         std::string line;
 
         int           pid_;
-        char          exName [_POSIX_PATH_MAX];
+        std::string   exName;
         char          state;
         unsigned      euid,
                       egid;
