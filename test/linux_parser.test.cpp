@@ -280,6 +280,25 @@ namespace LinuxParser {
         }
     }
 
+    std::string Ram(int pid) {
+        std::string line;
+        std::string value_str{"NONE"};
+        std::string token_str;
+        auto token_auto{0};
+        std::ifstream filestream("../test/proc/" + std::to_string(pid) + "/status");
+        if (filestream.is_open()) {
+            while (std::getline(filestream, line)) {
+                std::istringstream linestream(line);
+                while (linestream >> token_str >> token_auto) {
+                    if (token_str == "VmSize:") {
+                        value_str = std::to_string(token_auto);
+                    }
+                }
+            }
+        }
+        return value_str;
+    }
+
 }  // namespace LinuxParser
 
 int main() {
@@ -325,6 +344,15 @@ int main() {
     Test<std::string> test14(LinuxParser::Command(103), "(scsi_eh_0)");
     printf("14: Looking for %s and got %s\n", test14.CheckValue().c_str(), test14.TestValue().c_str());
 
+    Test<std::string> test15(LinuxParser::Ram(1), "33768");
+    printf("15: Looking for %s and got %s\n", test15.CheckValue().c_str(), test15.TestValue().c_str());
+
+    Test<std::string> test16(LinuxParser::Ram(10), "NONE");
+    printf("16: Looking for %s and got %s\n", test16.CheckValue().c_str(), test16.TestValue().c_str());
+
+    Test<std::string> test17(LinuxParser::Ram(103), "NONE");
+    printf("17: Looking for %s and got %s\n", test17.CheckValue().c_str(), test17.TestValue().c_str());
+
     // Check that all tests pass
     if (test1.TestValue() - test1.CheckValue() < 0.001 &&
         test2.Pass() &&
@@ -339,7 +367,10 @@ int main() {
         test11.Pass() &&
         test12.Pass() &&
         test13.Pass() &&
-        test14.Pass()) {
+        test14.Pass() &&
+        test15.Pass() &&
+        test16.Pass() &&
+        test17.Pass()) {
         return 0;  // pass
     } else {
         return 1;  // fail
