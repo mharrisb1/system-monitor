@@ -1,7 +1,7 @@
 #include "processor.h"
 
 void Processor::AddToVector() {
-    if (this->cpu_utilization_t.size() > 1000) {
+    if (this->cpu_utilization_t.size() > 10) {
         this->total_utilization -= this->cpu_utilization_t.front();
         this->cpu_utilization_t.erase(this->cpu_utilization_t.begin());
     } else {
