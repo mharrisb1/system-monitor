@@ -335,7 +335,7 @@ long int LinuxParser::UpTime(int pid) {
         states.kstkesp >> states.kstkeip >> states.signal >> states.blocked >>
         states.sigignore >> states.sigcatch >> states.wchan >> states.sched >>
         states.sched_priority;
-    return LinuxParser::UpTime() - (states.starttime / sysconf(_SC_CLK_TCK));
+    return LinuxParser::UpTime() - states.starttime;
   } else {
     return 1;
   }
