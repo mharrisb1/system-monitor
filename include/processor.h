@@ -8,8 +8,6 @@ public:
     float Utilization();
 
 private:
-    void AddToVector();
-    std::vector<float> cpu_utilization_t {LinuxParser::CpuUtilization()};
-    float total_utilization{0};
+    float cpu_utilization{0.};
 };
 
