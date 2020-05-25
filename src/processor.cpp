@@ -1,7 +1,4 @@
 #include "processor.h"
 
 // DONE
-float Processor::Utilization() const {
-    return this->cpu_utilization;
-}
-
+float Processor::Utilization() const { return this->cpu_utilization; }

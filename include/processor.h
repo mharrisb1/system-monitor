@@ -5,9 +5,8 @@
 
 class Processor {
 public:
-    float Utilization() const;
+  float Utilization() const;
 
 private:
-    float cpu_utilization{LinuxParser::CpuUtilization()};
+  float cpu_utilization{LinuxParser::CpuUtilization()};
 };
-
