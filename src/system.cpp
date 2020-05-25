@@ -14,8 +14,8 @@ using std::vector;
 Processor &System::Cpu() { return cpu_; }
 
 vector<Process> &System::Processes() {
-    this->processes_.clear();
-    vector<int> pids {LinuxParser::Pids()};
+  this->processes_.clear();
+  vector<int> pids{LinuxParser::Pids()};
   for (int i : pids) {
     Process process{i};
     this->processes_.push_back(process);

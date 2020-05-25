@@ -140,7 +140,8 @@ long LinuxParser::ActiveJiffies(int pid) {
         states.kstkesp >> states.kstkeip >> states.signal >> states.blocked >>
         states.sigignore >> states.sigcatch >> states.wchan >> states.sched >>
         states.sched_priority;
-      return states.majflt + states.cmajflt + states.utime + states.stime + states.priority;
+    return states.majflt + states.cmajflt + states.utime + states.stime +
+           states.priority;
   } else {
     return 0;
   }
@@ -229,7 +230,7 @@ string LinuxParser::Command(int pid) {
   std::ifstream filestream(kProcDirectory + std::to_string(pid) +
                            kCmdlineFilename);
   if (filestream.is_open()) {
-      std::getline(filestream, line);
+    std::getline(filestream, line);
   }
   return line;
 }
