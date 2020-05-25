@@ -335,7 +335,7 @@ long int LinuxParser::UpTime(int pid) {
         states.kstkesp >> states.kstkeip >> states.signal >> states.blocked >>
         states.sigignore >> states.sigcatch >> states.wchan >> states.sched >>
         states.sched_priority;
-    return states.itrealvalue;
+    return LinuxParser::UpTime() - states.itrealvalue;
   } else {
     return 1;
   }
