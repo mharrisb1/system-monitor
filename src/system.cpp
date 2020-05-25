@@ -14,11 +14,23 @@ using std::size_t;
 using std::string;
 using std::vector;
 
-// TODO: Return the system's CPU
-Processor& System::Cpu() { return cpu_; }
+// DONE
+Processor& System::Cpu() {
+    return cpu_;
+}
 
-// TODO: Return a container composed of the system's processes
-vector<Process>& System::Processes() { return processes_; }
+// DONE
+vector<Process>& System::Processes() {
+    for (int i: this->pids_) {
+        Process process{i};
+        this->processes_.push_back(process);
+    }
+    std::sort(this->processes_.begin(), this->processes_.end(),
+              [](Process a, Process b){
+              return a.CpuUtilization() > b.CpuUtilization();
+    });
+    return this->processes_;
+}
 
 // DONE
 std::string System::Kernel() {

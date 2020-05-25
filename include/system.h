@@ -8,17 +8,17 @@
 
 class System {
  public:
-  Processor& Cpu();                   // TODO: See src/system.cpp
-  std::vector<Process>& Processes();  // TODO: See src/system.cpp
-  float MemoryUtilization();
-  long UpTime();
-  int TotalProcesses();
-  int RunningProcesses();
-  std::string Kernel();
-  std::string OperatingSystem();
+  Processor& Cpu();
+  std::vector<Process>& Processes();
+  static float MemoryUtilization();
+  static long UpTime();
+  static int TotalProcesses();
+  static int RunningProcesses();
+  static std::string Kernel();
+  static std::string OperatingSystem();
 
-  // TODO: Define any necessary private members
  private:
-  Processor cpu_ = {};
-  std::vector<Process> processes_ = {};
+  Processor cpu_{};
+  std::vector<Process> processes_{};
+  std::vector<int> pids_{LinuxParser::Pids()};
 };
