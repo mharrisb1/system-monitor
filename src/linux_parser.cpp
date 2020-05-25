@@ -251,7 +251,7 @@ string LinuxParser::Command(int pid) {
 // DONE
 string LinuxParser::Ram(int pid) {
   std::string line;
-  std::string value_str{"NONE"};
+  std::string value_str{"0"};
   std::string token_str;
   auto token_auto{0};
   std::ifstream filestream(kProcDirectory + std::to_string(pid) +
@@ -335,7 +335,7 @@ long int LinuxParser::UpTime(int pid) {
         states.kstkesp >> states.kstkeip >> states.signal >> states.blocked >>
         states.sigignore >> states.sigcatch >> states.wchan >> states.sched >>
         states.sched_priority;
-    return LinuxParser::UpTime() - states.starttime;
+    return LinuxParser::UpTime() - states.timeout;
   } else {
     return 1;
   }
