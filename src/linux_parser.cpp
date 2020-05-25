@@ -406,7 +406,7 @@ string LinuxParser::User(int pid) {
             }
         }
     }
-    for (int i = 0; i < tokens.size(); ++i) {
+    for (unsigned int i = 0; i <= tokens.size(); ++i) {
         if (tokens[i] == actual_uid && tokens[i-1] != actual_uid) {
             user = tokens[i-2];
             break;
@@ -415,9 +415,8 @@ string LinuxParser::User(int pid) {
     return user;
 }
 
-// TODO: Read and return the uptime of a process
-// REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::UpTime(int pid[[maybe_unused]]) {
+// DONE
+long LinuxParser::UpTime(int pid) {
     std::string line;
 
     int           pid_;
