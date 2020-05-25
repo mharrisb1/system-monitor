@@ -8,6 +8,6 @@ public:
     float Utilization();
 
 private:
-    float cpu_utilization{0.};
+    float cpu_utilization{LinuxParser::CpuUtilization()};
 };
 
