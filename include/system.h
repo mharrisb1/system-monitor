@@ -20,5 +20,5 @@ public:
 private:
   Processor cpu_{};
   std::vector<Process> processes_{};
-  std::vector<int> pids_{LinuxParser::Pids()};
+  std::vector<int> pids_{};
 };
