@@ -19,6 +19,7 @@ Processor &System::Cpu() { return cpu_; }
 
 // DONE
 vector<Process> &System::Processes() {
+    this->processes_.clear();
   for (int i : this->pids_) {
     Process process{i};
     this->processes_.push_back(process);
