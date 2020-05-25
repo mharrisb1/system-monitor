@@ -320,7 +320,7 @@ long int LinuxParser::UpTime(int pid) {
   std::string line;
   PIDStates states{};
   std::ifstream filestream(kProcDirectory + std::to_string(pid) +
-                           kProcDirectory);
+                           kStatFilename);
   if (filestream.is_open()) {
     std::getline(filestream, line);
     std::istringstream linestream(line);
@@ -335,7 +335,7 @@ long int LinuxParser::UpTime(int pid) {
         states.kstkesp >> states.kstkeip >> states.signal >> states.blocked >>
         states.sigignore >> states.sigcatch >> states.wchan >> states.sched >>
         states.sched_priority;
-    return LinuxParser::UpTime() - states.timeout;
+    return states.itrealvalue;
   } else {
     return 1;
   }

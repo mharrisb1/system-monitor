@@ -295,7 +295,7 @@ namespace LinuxParser {
                        >> states.priority >> states.timeout >> states.itrealvalue >> states.starttime >> states.vsize >> states.rss >> states.rlim >> states.startcode
                        >> states.endcode >> states.startstack >> states.kstkesp >> states.kstkeip >> states.signal >> states.blocked >> states.sigignore >> states.sigcatch
                        >> states.wchan >> states.sched >> states.sched_priority;
-            return states.utime;
+            return states.itrealvalue;
         } else {
             return 1;
         }
@@ -358,7 +358,7 @@ int main() {
     Test<std::string> test18(LinuxParser::User(1), "root");
     printf("18: Looking for %s and got %s\n", test18.CheckValue().c_str(), test18.TestValue().c_str());
 
-    Test<long> test19(LinuxParser::UpTime(1), 2338);
+    Test<long> test19(LinuxParser::UpTime(1), 34578432);
     printf("19: Looking for %ld and got %ld\n", test19.CheckValue(), test19.TestValue());
 
 
@@ -380,7 +380,8 @@ int main() {
         test15.Pass() &&
         test16.Pass() &&
         test17.Pass() &&
-        test18.Pass()) {
+        test18.Pass() &&
+        test19.Pass()) {
         return 0;  // pass
     } else {
         return 1;  // fail
