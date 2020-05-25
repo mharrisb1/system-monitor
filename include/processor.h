@@ -5,7 +5,7 @@
 
 class Processor {
 public:
-  float Utilization() const;
+  [[nodiscard]] float Utilization() const;
 
 private:
   float cpu_utilization{LinuxParser::CpuUtilization()};

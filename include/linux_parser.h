@@ -36,7 +36,7 @@ struct CPUStates {
   long kSoftIRQ_;
   long kSteal_;
 
-  long Sum() {
+  [[nodiscard]] long Sum() const {
     return kUser_ + kNice_ + kSystem_ + kIdle_ + kIOwait_ + kIRQ_ + kSoftIRQ_;
   }
 };
