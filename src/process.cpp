@@ -35,6 +35,6 @@ long int Process::UpTime() const {
     return LinuxParser::UpTime(this->pid_);
 }
 
-//// TODO: Overload the "less than" comparison operator for Process objects
-//// REMOVE: [[maybe_unused]] once you define the function
+// TODO: Overload the "less than" comparison operator for Process objects
+// REMOVE: [[maybe_unused]] once you define the function
 //bool Process::operator<(Process const& a[[maybe_unused]]) const {this->CpuUtilization() > a.CpuUtilization()}
