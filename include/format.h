@@ -4,4 +4,4 @@
 
 namespace Format {
 std::string ElapsedTime(long seconds);
-};  // namespace Format
+}; // namespace Format

@@ -7,9 +7,9 @@
 #include "processor.h"
 
 class System {
- public:
-  Processor& Cpu();
-  std::vector<Process>& Processes();
+public:
+  Processor &Cpu();
+  std::vector<Process> &Processes();
   static float MemoryUtilization();
   static long UpTime();
   static int TotalProcesses();
@@ -17,7 +17,7 @@ class System {
   static std::string Kernel();
   static std::string OperatingSystem();
 
- private:
+private:
   Processor cpu_{};
   std::vector<Process> processes_{};
   std::vector<int> pids_{LinuxParser::Pids()};
