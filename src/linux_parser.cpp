@@ -109,86 +109,31 @@ long LinuxParser::UpTime() {
 long LinuxParser::Jiffies() {
     std::string line;
     std::string cpu {"cpu"};
-    long user_jif {0};
-    long nice_jif {0};
-    long sys_jif {0};
-    long idle_jif {0};
-    long iowait_jif {0};
-    long irq_jif {0};
-    long softirq_jif {0};
-    long sum_jiffies {0};
+    CPUStates states{};
     std::ifstream filestream("/proc" + kStatFilename);
     if (filestream.is_open()){
         std::getline(filestream, line);
         std::istringstream linestream(line);
-        linestream >> cpu >> user_jif >> nice_jif >> sys_jif >> idle_jif
-                   >> iowait_jif >> irq_jif >> softirq_jif;
+        linestream >> cpu >> states.kUser_ >> states.kNice_ >> states.kSystem_ >> states.kIdle_
+                   >> states.kIOwait_ >> states.kIRQ_ >> states.kSoftIRQ_;
     }
-
-    std::vector<long int> jiffies {user_jif, nice_jif, sys_jif, idle_jif, iowait_jif,
-                                   irq_jif, softirq_jif, sum_jiffies};
-
-    for (auto j: jiffies) {
-        sum_jiffies += j;
-    }
-
-    return sum_jiffies;
+    return states.Sum();
 }
 
 // DONE
 long LinuxParser::ActiveJiffies(int pid) {
     std::string line;
-
-    int           pid_;
-    std::string   exName;
-    char          state;
-    unsigned      euid,
-            egid;
-    int           ppid;
-    int           pgrp;
-    int           session;
-    int           tty;
-    int           tpgid;
-    unsigned int  flags;
-    unsigned int  minflt;
-    unsigned int  cminflt;
-    unsigned int  majflt;
-    unsigned int  cmajflt;
-    int           utime;    // 16
-    int           stime;    // 17
-    int		      cutime;
-    int           cstime;
-    int           counter;
-    int           priority;
-    unsigned int  timeout;
-    unsigned int  itrealvalue;
-    int           starttime;
-    unsigned int  vsize;
-    unsigned int  rss;
-    unsigned int  rlim;
-    unsigned int  startcode;
-    unsigned int  endcode;
-    unsigned int  startstack;
-    unsigned int  kstkesp;
-    unsigned int  kstkeip;
-    int		      signal;
-    int           blocked;
-    int           sigignore;
-    int           sigcatch;
-    unsigned int  wchan;
-    int		      sched,
-            sched_priority;
-
+    PIDStates states{};
     std::ifstream filestream(kProcDirectory + std::to_string(pid) + kStatFilename);
     if (filestream.is_open()) {
         std::getline(filestream, line);
         std::istringstream linestream(line);
-        linestream >> pid_ >> exName >> state >> euid >> egid >> ppid >> pgrp >> session >> tty >> tpgid >> flags
-                   >> minflt >> cminflt >> majflt >> cmajflt >> utime >> stime >> cutime >> cstime >> counter
-                   >> priority >> timeout >> itrealvalue >> starttime >> vsize >> rss >> rlim >> startcode
-                   >> endcode >> startstack >> kstkesp >> kstkeip >> signal >> blocked >> sigignore >> sigcatch
-                   >> wchan >> sched >> sched_priority;
-        return utime + stime;
+        linestream >> states.pid_ >> states.exName >> states.state >> states.euid >> states.egid >> states.ppid >> states.pgrp >> states.session >> states.tty >> states.tpgid >> states.flags
+                   >> states.minflt >> states.cminflt >> states.majflt >> states.cmajflt >> states.utime >> states.stime >> states.cutime >> states.cstime >> states.counter
+                   >> states.priority >> states.timeout >> states.itrealvalue >> states.starttime >> states.vsize >> states.rss >> states.rlim >> states.startcode
+                   >> states.endcode >> states.startstack >> states.kstkesp >> states.kstkeip >> states.signal >> states.blocked >> states.sigignore >> states.sigcatch
+                   >> states.wchan >> states.sched >> states.sched_priority;
+        return states.utime + states.stime;
     } else {
         return 0;
     }
@@ -198,52 +143,31 @@ long LinuxParser::ActiveJiffies(int pid) {
 long LinuxParser::ActiveJiffies() {
     std::string line;
     std::string cpu;
-    long user_jif;
-    long nice_jif;
-    long sys_jif;
-    long idle_jif;
-    long iowait_jif;
-    long irq_jif;
-    long softirq_jif;
-    long sum_jiffies {0};
+    CPUStates states{};
     std::ifstream filestream("/proc" + kStatFilename);
     if (filestream.is_open()){
         std::getline(filestream, line);
         std::istringstream linestream(line);
-        linestream >> cpu >> user_jif >> nice_jif >> sys_jif >> idle_jif
-                   >> iowait_jif >> irq_jif >> softirq_jif;
+        linestream >> cpu >> states.kUser_ >> states.kNice_ >> states.kSystem_ >> states.kIdle_
+                   >> states.kIOwait_ >> states.kIRQ_ >> states.kSoftIRQ_;
     }
-
-    std::vector<long int> jiffies {user_jif, nice_jif, sys_jif, iowait_jif,
-                                   irq_jif, softirq_jif, sum_jiffies};
-
-    for (auto j: jiffies) {
-        sum_jiffies += j;
-    }
-
-    return sum_jiffies;
+    return states.Sum() - (states.kIdle_ + states.kIOwait_);
 }
 
 // DONE
 long LinuxParser::IdleJiffies() {
     std::string line;
     std::string cpu;
-    long user_jif;
-    long nice_jif;
-    long sys_jif;
-    long idle_jif;
-    long iowait_jif;
-    long irq_jif;
-    long softirq_jif;
+    CPUStates states{};
     std::ifstream filestream("/proc" + kStatFilename);
     if (filestream.is_open()){
         std::getline(filestream, line);
         std::istringstream linestream(line);
-        linestream >> cpu >> user_jif >> nice_jif >> sys_jif >> idle_jif
-                   >> iowait_jif >> irq_jif >> softirq_jif;
+        linestream >> cpu >> states.kUser_ >> states.kNice_ >> states.kSystem_ >> states.kIdle_
+                   >> states.kIOwait_ >> states.kIRQ_ >> states.kSoftIRQ_;
     }
 
-    return idle_jif;
+    return states.kIdle_ + states.kIOwait_;
 }
 
 // DONE
@@ -294,57 +218,17 @@ int LinuxParser::RunningProcesses() {
 // DONE
 string LinuxParser::Command(int pid) {
     std::string line;
-
-    int           pid_;
-    std::string   exName;
-    char          state;
-    unsigned      euid,
-            egid;
-    int           ppid;
-    int           pgrp;
-    int           session;
-    int           tty;
-    int           tpgid;
-    unsigned int  flags;
-    unsigned int  minflt;
-    unsigned int  cminflt;
-    unsigned int  majflt;
-    unsigned int  cmajflt;
-    int           utime;    // 16
-    int           stime;    // 17
-    int		      cutime;
-    int           cstime;
-    int           counter;
-    int           priority;
-    unsigned int  timeout;
-    unsigned int  itrealvalue;
-    int           starttime;
-    unsigned int  vsize;
-    unsigned int  rss;
-    unsigned int  rlim;
-    unsigned int  startcode;
-    unsigned int  endcode;
-    unsigned int  startstack;
-    unsigned int  kstkesp;
-    unsigned int  kstkeip;
-    int		      signal;
-    int           blocked;
-    int           sigignore;
-    int           sigcatch;
-    unsigned int  wchan;
-    int		      sched,
-            sched_priority;
-
+    PIDStates states{};
     std::ifstream filestream(kProcDirectory + std::to_string(pid) + kStatFilename);
     if (filestream.is_open()) {
         std::getline(filestream, line);
         std::istringstream linestream(line);
-        linestream >> pid_ >> exName >> state >> euid >> egid >> ppid >> pgrp >> session >> tty >> tpgid >> flags
-                   >> minflt >> cminflt >> majflt >> cmajflt >> utime >> stime >> cutime >> cstime >> counter
-                   >> priority >> timeout >> itrealvalue >> starttime >> vsize >> rss >> rlim >> startcode
-                   >> endcode >> startstack >> kstkesp >> kstkeip >> signal >> blocked >> sigignore >> sigcatch
-                   >> wchan >> sched >> sched_priority;
-        return exName;
+        linestream >> states.pid_ >> states.exName >> states.state >> states.euid >> states.egid >> states.ppid >> states.pgrp >> states.session >> states.tty >> states.tpgid >> states.flags
+                   >> states.minflt >> states.cminflt >> states.majflt >> states.cmajflt >> states.utime >> states.stime >> states.cutime >> states.cstime >> states.counter
+                   >> states.priority >> states.timeout >> states.itrealvalue >> states.starttime >> states.vsize >> states.rss >> states.rlim >> states.startcode
+                   >> states.endcode >> states.startstack >> states.kstkesp >> states.kstkeip >> states.signal >> states.blocked >> states.sigignore >> states.sigcatch
+                   >> states.wchan >> states.sched >> states.sched_priority;
+        return states.exName;
     } else {
         return "NONE";
     }
@@ -418,57 +302,17 @@ string LinuxParser::User(int pid) {
 // DONE
 long int LinuxParser::UpTime(int pid) {
     std::string line;
-
-    int           pid_;
-    std::string   exName;
-    char          state;
-    unsigned      euid,
-            egid;
-    int           ppid;
-    int           pgrp;
-    int           session;
-    int           tty;
-    int           tpgid;
-    unsigned int  flags;
-    unsigned int  minflt;
-    unsigned int  cminflt;
-    unsigned int  majflt;
-    unsigned int  cmajflt;
-    int           utime;    // 16
-    int           stime;    // 17
-    int		      cutime;
-    int           cstime;
-    int           counter;
-    int           priority;
-    unsigned int  timeout;
-    unsigned int  itrealvalue;
-    int           starttime;
-    unsigned int  vsize;
-    unsigned int  rss;
-    unsigned int  rlim;
-    unsigned int  startcode;
-    unsigned int  endcode;
-    unsigned int  startstack;
-    unsigned int  kstkesp;
-    unsigned int  kstkeip;
-    int		      signal;
-    int           blocked;
-    int           sigignore;
-    int           sigcatch;
-    unsigned int  wchan;
-    int		      sched,
-            sched_priority;
-
+    PIDStates states{};
     std::ifstream filestream(kProcDirectory + std::to_string(pid) + kProcDirectory);
     if (filestream.is_open()) {
         std::getline(filestream, line);
         std::istringstream linestream(line);
-        linestream >> pid_ >> exName >> state >> euid >> egid >> ppid >> pgrp >> session >> tty >> tpgid >> flags
-                   >> minflt >> cminflt >> majflt >> cmajflt >> utime >> stime >> cutime >> cstime >> counter
-                   >> priority >> timeout >> itrealvalue >> starttime >> vsize >> rss >> rlim >> startcode
-                   >> endcode >> startstack >> kstkesp >> kstkeip >> signal >> blocked >> sigignore >> sigcatch
-                   >> wchan >> sched >> sched_priority;
-        return utime;
+        linestream >> states.pid_ >> states.exName >> states.state >> states.euid >> states.egid >> states.ppid >> states.pgrp >> states.session >> states.tty >> states.tpgid >> states.flags
+                   >> states.minflt >> states.cminflt >> states.majflt >> states.cmajflt >> states.utime >> states.stime >> states.cutime >> states.cstime >> states.counter
+                   >> states.priority >> states.timeout >> states.itrealvalue >> states.starttime >> states.vsize >> states.rss >> states.rlim >> states.startcode
+                   >> states.endcode >> states.startstack >> states.kstkesp >> states.kstkeip >> states.signal >> states.blocked >> states.sigignore >> states.sigcatch
+                   >> states.wchan >> states.sched >> states.sched_priority;
+        return states.utime;
     } else {
         return 1;
     }
