@@ -22,10 +22,10 @@ Processor& System::Cpu() {
 // DONE
 vector<Process>& System::Processes() {
     vector<int> pids {LinuxParser::Pids()};
-    vector<Process>& processes{};
+    vector<Process> processes{};
     for (int i: pids) {
         Process process{i};
-        processes.push_back(&process);
+        processes.push_back(process);
     }
     return processes;
 }
