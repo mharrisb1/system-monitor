@@ -19,7 +19,9 @@ Processor &System::Cpu() { return cpu_; }
 
 // DONE
 vector<Process> &System::Processes() {
-  for (int i : this->pids_) {
+    this->processes_.clear();
+    vector<int> pids {LinuxParser::Pids()};
+  for (int i : pids) {
     Process process{i};
     this->processes_.push_back(process);
   }
