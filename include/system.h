@@ -20,4 +20,5 @@ class System {
  private:
   Processor cpu_{};
   std::vector<Process> processes_{};
+  const std::vector<int> pids_{LinuxParser::Pids()};
 };
