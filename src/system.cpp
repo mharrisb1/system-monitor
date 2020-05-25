@@ -26,6 +26,10 @@ vector<Process>& System::Processes() {
         Process process{i};
         this->processes_.push_back(process);
     }
+    std::sort(this->processes_.begin(), this->processes_.end(),
+              [](const Process& a, const Process& b){
+              return a.CpuUtilization() > b.CpuUtilization();
+    });
     return this->processes_;
 }
 

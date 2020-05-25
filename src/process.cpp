@@ -11,30 +11,30 @@ using std::to_string;
 using std::vector;
 
 // DONE
-float Process::CpuUtilization() {
+float Process::CpuUtilization() const {
     return (float)LinuxParser::ActiveJiffies(this->pid_) / (float)LinuxParser::Jiffies();
 }
 
 // DONE
-string Process::Command() {
+string Process::Command() const {
     return LinuxParser::Command(this->pid_);
 }
 
 // DONE
-string Process::Ram() {
+string Process::Ram() const {
     return LinuxParser::Ram(this->pid_);
 }
 
 // DONE
-string Process::User() {
+string Process::User() const {
     return LinuxParser::User(this->pid_);
 }
 
 // DONE
-long int Process::UpTime() {
+long int Process::UpTime() const {
     return LinuxParser::UpTime(this->pid_);
 }
 
-// TODO: Overload the "less than" comparison operator for Process objects
-// REMOVE: [[maybe_unused]] once you define the function
-bool Process::operator<(Process const& a[[maybe_unused]]) const { return true; }
+//// TODO: Overload the "less than" comparison operator for Process objects
+//// REMOVE: [[maybe_unused]] once you define the function
+//bool Process::operator<(Process const& a[[maybe_unused]]) const {this->CpuUtilization() > a.CpuUtilization()}

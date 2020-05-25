@@ -10,13 +10,14 @@ class Process {
 public:
     explicit Process(int pid) : pid_(pid) {}
     int Pid() {return pid_;}
-    std::string User();
-    std::string Command();
-    float CpuUtilization();
-    std::string Ram();
-    long int UpTime();
+    std::string User() const;
+    std::string Command() const;
+    float CpuUtilization() const;
+    std::string Ram() const;
+    long int UpTime() const;
     bool operator<(Process const& a) const;
 
  private:
     int pid_{0};
+    float cpu_utilization{LinuxParser::CpuUtilization()};
 };
