@@ -22,12 +22,11 @@ Processor& System::Cpu() {
 // DONE
 vector<Process>& System::Processes() {
     vector<int> pids {LinuxParser::Pids()};
-    vector<Process> processes{};
     for (int i: pids) {
         Process process{i};
-        processes.push_back(process);
+        this->processes_.push_back(process);
     }
-    return processes;
+    return this->processes_;
 }
 
 // DONE
