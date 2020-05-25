@@ -416,7 +416,7 @@ string LinuxParser::User(int pid) {
 }
 
 // DONE
-long LinuxParser::UpTime(int pid) {
+long int LinuxParser::UpTime(int pid) {
     std::string line;
 
     int           pid_;

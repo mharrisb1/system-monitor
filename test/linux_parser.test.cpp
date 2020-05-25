@@ -343,7 +343,7 @@ namespace LinuxParser {
         return user;
     }
 
-    long UpTime(int pid) {
+    long int UpTime(int pid) {
         std::string line;
 
         int           pid_;
