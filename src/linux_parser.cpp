@@ -350,9 +350,8 @@ string LinuxParser::Command(int pid) {
     }
 }
 
-// TODO: Read and return the memory used by a process
-// REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::Ram(int pid[[maybe_unused]]) {
+// DONE
+string LinuxParser::Ram(int pid) {
     std::string line;
     std::string value_str{"NONE"};
     std::string token_str;
@@ -371,14 +370,107 @@ string LinuxParser::Ram(int pid[[maybe_unused]]) {
     return value_str;
 }
 
-// TODO: Read and return the user ID associated with a process
-// REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::Uid(int pid[[maybe_unused]]) { return string(); }
+// DONE
+string LinuxParser::Uid(int pid) {
+    std::string line;
+    std::string value_str{"NONE"};
+    std::string token_str;
+    auto token_auto{1};
+    std::ifstream filestream(kProcDirectory + std::to_string(pid) + kStatusFilename);
+    if (filestream.is_open()) {
+        while (std::getline(filestream, line)) {
+            std::istringstream linestream(line);
+            while (linestream >> token_str >> token_auto) {
+                if (token_str == "Uid:") {
+                    value_str = std::to_string(token_auto);
+                }
+            }
+        }
+    }
+    return value_str;
+}
 
-// TODO: Read and return the user associated with a process
-// REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::User(int pid[[maybe_unused]]) { return string(); }
+// DONE
+string LinuxParser::User(int pid) {
+    std::string actual_uid{LinuxParser::Uid(pid)};
+    std::string user{"None"};
+    std::string line;
+    std::string tmp;
+    std::vector<std::string> tokens{};
+    std::ifstream filestream(kPasswordPath);
+    if (filestream.is_open()) {
+        while (std::getline(filestream, line, ':')) {
+            std::istringstream linestream(line);
+            while (linestream >> tmp) {
+                tokens.push_back(tmp);
+            }
+        }
+    }
+    for (int i = 0; i < tokens.size(); ++i) {
+        if (tokens[i] == actual_uid && tokens[i-1] != actual_uid) {
+            user = tokens[i-2];
+            break;
+        }
+    }
+    return user;
+}
 
 // TODO: Read and return the uptime of a process
 // REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::UpTime(int pid[[maybe_unused]]) { return 0; }
+long LinuxParser::UpTime(int pid[[maybe_unused]]) {
+    std::string line;
+
+    int           pid_;
+    std::string   exName;
+    char          state;
+    unsigned      euid,
+            egid;
+    int           ppid;
+    int           pgrp;
+    int           session;
+    int           tty;
+    int           tpgid;
+    unsigned int  flags;
+    unsigned int  minflt;
+    unsigned int  cminflt;
+    unsigned int  majflt;
+    unsigned int  cmajflt;
+    int           utime;    // 16
+    int           stime;    // 17
+    int		      cutime;
+    int           cstime;
+    int           counter;
+    int           priority;
+    unsigned int  timeout;
+    unsigned int  itrealvalue;
+    int           starttime;
+    unsigned int  vsize;
+    unsigned int  rss;
+    unsigned int  rlim;
+    unsigned int  startcode;
+    unsigned int  endcode;
+    unsigned int  startstack;
+    unsigned int  kstkesp;
+    unsigned int  kstkeip;
+    int		      signal;
+    int           blocked;
+    int           sigignore;
+    int           sigcatch;
+    unsigned int  wchan;
+    int		      sched,
+            sched_priority;
+
+    std::ifstream filestream(kProcDirectory + std::to_string(pid) + kProcDirectory);
+    if (filestream.is_open()) {
+        std::getline(filestream, line);
+        std::istringstream linestream(line);
+        linestream >> pid_ >> exName >> state >> euid >> egid >> ppid >> pgrp >> session >> tty >> tpgid >> flags
+                   >> minflt >> cminflt >> majflt >> cmajflt >> utime >> stime >> cutime >> cstime >> counter
+                   >> priority >> timeout >> itrealvalue >> starttime >> vsize >> rss >> rlim >> startcode
+                   >> endcode >> startstack >> kstkesp >> kstkeip >> signal >> blocked >> sigignore >> sigcatch
+                   >> wchan >> sched >> sched_priority;
+        return utime;
+    } else {
+        return 1;
+    }
+}
