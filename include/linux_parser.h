@@ -7,6 +7,7 @@
 namespace LinuxParser {
 // Paths
 const std::string kProcDirectory{"/proc/"};
+const std::string kCmdlineFilename{"/cmdline"};
 const std::string kStatusFilename{"/status"};
 const std::string kStatFilename{"/stat"};
 const std::string kUptimeFilename{"/uptime"};
@@ -35,7 +36,7 @@ struct CPUStates {
   long kSoftIRQ_;
   long kSteal_;
 
-  long Sum() {
+  [[nodiscard]] long Sum() const {
     return kUser_ + kNice_ + kSystem_ + kIdle_ + kIOwait_ + kIRQ_ + kSoftIRQ_;
   }
 };

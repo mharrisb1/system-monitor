@@ -140,7 +140,8 @@ long LinuxParser::ActiveJiffies(int pid) {
         states.kstkesp >> states.kstkeip >> states.signal >> states.blocked >>
         states.sigignore >> states.sigcatch >> states.wchan >> states.sched >>
         states.sched_priority;
-    return states.utime + states.stime;
+    return states.majflt + states.cmajflt + states.utime + states.stime +
+           states.priority;
   } else {
     return 0;
   }
@@ -224,34 +225,20 @@ int LinuxParser::RunningProcesses() {
 
 // DONE
 string LinuxParser::Command(int pid) {
-  std::string line;
+  std::string line{"NONE"};
   PIDStates states{};
   std::ifstream filestream(kProcDirectory + std::to_string(pid) +
-                           kStatFilename);
+                           kCmdlineFilename);
   if (filestream.is_open()) {
     std::getline(filestream, line);
-    std::istringstream linestream(line);
-    linestream >> states.pid_ >> states.exName >> states.state >> states.euid >>
-        states.egid >> states.ppid >> states.pgrp >> states.session >>
-        states.tty >> states.tpgid >> states.flags >> states.minflt >>
-        states.cminflt >> states.majflt >> states.cmajflt >> states.utime >>
-        states.stime >> states.cutime >> states.cstime >> states.counter >>
-        states.priority >> states.timeout >> states.itrealvalue >>
-        states.starttime >> states.vsize >> states.rss >> states.rlim >>
-        states.startcode >> states.endcode >> states.startstack >>
-        states.kstkesp >> states.kstkeip >> states.signal >> states.blocked >>
-        states.sigignore >> states.sigcatch >> states.wchan >> states.sched >>
-        states.sched_priority;
-    return states.exName;
-  } else {
-    return "NONE";
   }
+  return line;
 }
 
 // DONE
 string LinuxParser::Ram(int pid) {
   std::string line;
-  std::string value_str{"NONE"};
+  std::string value_str{"0"};
   std::string token_str;
   auto token_auto{0};
   std::ifstream filestream(kProcDirectory + std::to_string(pid) +
@@ -320,7 +307,7 @@ long int LinuxParser::UpTime(int pid) {
   std::string line;
   PIDStates states{};
   std::ifstream filestream(kProcDirectory + std::to_string(pid) +
-                           kProcDirectory);
+                           kStatFilename);
   if (filestream.is_open()) {
     std::getline(filestream, line);
     std::istringstream linestream(line);
@@ -335,7 +322,7 @@ long int LinuxParser::UpTime(int pid) {
         states.kstkesp >> states.kstkeip >> states.signal >> states.blocked >>
         states.sigignore >> states.sigcatch >> states.wchan >> states.sched >>
         states.sched_priority;
-    return states.utime;
+    return LinuxParser::UpTime() - (states.timeout / sysconf(_SC_CLK_TCK));
   } else {
     return 1;
   }

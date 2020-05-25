@@ -1,5 +1,7 @@
 # Udacity C++ Nanodegree System Monitor Project
 
+![final build](./img/final.png)
+
 ## Make
 This project uses [Make](https://www.gnu.org/software/make/). The Makefile has five targets:
 * `build`  compiles the source code and generates an executable
