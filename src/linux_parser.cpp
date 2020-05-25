@@ -224,14 +224,14 @@ int LinuxParser::RunningProcesses() {
 
 // DONE
 string LinuxParser::Command(int pid) {
-  std::string line;
+  std::string line{"NONE"};
   PIDStates states{};
   std::ifstream filestream(kProcDirectory + std::to_string(pid) +
                            kCmdlineFilename);
   if (filestream.is_open()) {
       std::getline(filestream, line);
-      return line;
   }
+  return line;
 }
 
 // DONE
