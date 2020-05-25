@@ -21,13 +21,13 @@ Processor& System::Cpu() {
 
 // DONE
 vector<Process>& System::Processes() {
-    vector<int> pids {LinuxParser::Pids()};
+    vector<int> pids = LinuxParser::Pids();
     for (int i: pids) {
         Process process{i};
         this->processes_.push_back(process);
     }
     std::sort(this->processes_.begin(), this->processes_.end(),
-              [](const Process& a, const Process& b){
+              [](Process& a, Process& b){
               return a.CpuUtilization() > b.CpuUtilization();
     });
     return this->processes_;
