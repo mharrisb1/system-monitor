@@ -240,6 +240,7 @@ string LinuxParser::Ram(int pid) {
   std::string line;
   std::string value_str{"0"};
   std::string token_str;
+  int token_int{0};
   auto token_auto{0};
   std::ifstream filestream(kProcDirectory + std::to_string(pid) +
                            kStatusFilename);
@@ -248,7 +249,8 @@ string LinuxParser::Ram(int pid) {
       std::istringstream linestream(line);
       while (linestream >> token_str >> token_auto) {
         if (token_str == "VmSize:") {
-          value_str = std::to_string(token_auto);
+          token_int = static_cast<int>(token_auto) / 1000;
+          value_str = std::to_string(token_int);
         }
       }
     }
