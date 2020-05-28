@@ -14,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: run tests
-      run: make tests
+      run: make test
     - name: clean makefiles
       run: make clean
     - name: run build
