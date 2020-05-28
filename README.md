@@ -1,7 +1,7 @@
 # Udacity C++ Nanodegree System Monitor Project
 
 ## Make
-This project uses [Make](https://www.gnu.org/software/make/). The Makefile has five targets:
+This project uses [Make](https://www.gnu.org/software/make/) on the surface but actually utilizes CMake under the hood. The Makefile has five targets:
 * `build`  compiles the source code and generates an executable
 * `test`   Runs unit tests, does not build source
 * `format` applies [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html) to style the source code
